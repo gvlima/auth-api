@@ -23,13 +23,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     @Autowired
-    LoginService loginService;
+    private LoginService loginService;
 
     @Autowired
-    RegisterService registerService;
+    private RegisterService registerService;
 
     @Autowired
-    UserMapper mapper;
+    private UserMapper mapper;
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequest){

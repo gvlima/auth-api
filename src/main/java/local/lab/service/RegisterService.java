@@ -12,10 +12,10 @@ import java.util.List;
 public class RegisterService {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     public User register(RegisterRequestDTO registerRequest) {
         if (userService.findByEmail(registerRequest.email()).isPresent()) {
