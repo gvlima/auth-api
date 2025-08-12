@@ -4,6 +4,7 @@ This project showcases a complete implementation of authentication and authoriza
 ## Features
 - User login and registration
 - Password encryption
+- Update password
 - Persistence layer with Spring Data JPA and database
 - Token-based authentication
 - Security filter for protected routes
