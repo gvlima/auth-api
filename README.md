@@ -1,13 +1,13 @@
-# Spring Security with JWT implementation
-This project demonstrates a complete implementation of authentication and authorization using Spring Security with JSON Web Tokens (JWT).
+# JWT Implementation with Spring Boot 3 and Spring Security 6
+This project showcases a complete implementation of authentication and authorization process using of JSON Web Tokens(JWT) with Spring Boot 3 and Spring Security 6.
 
 ## Features
-- User registration
-- User login with generation of JWT token
-- Persistence layer with H2 Database
-- Password encryption with BCrypt
-- JWT authentication filter for protected routes
-- Role-based authorization
+- User login and registration
+- Password encryption
+- Persistence layer with Spring Data JPA and database
+- Token-based authentication
+- Security filter for protected routes
+- Role-Based authorization with authorities
 - Custom access denied handling
 - Logout mechanism
 - Refresh token
@@ -31,16 +31,16 @@ To get started with this project, you will need to have the following installed 
 To build and run the project, follow these steps:
 
 ```bash
-# 1. Clonar o repositório
+# 1. Clone project repository
 git clone https://github.com/gvlima/auth-api.git
 
-# 2. Entrar no diretório do projeto
+# 2. Access project folder
 cd auth-api
 
-# 3. Compilar o projeto
+# 3. Install dependencies and compile project
 mvn clean install
 
-# 4. Executar a aplicação
+# 4. Run application
 mvn spring-boot:run
 ```
 
