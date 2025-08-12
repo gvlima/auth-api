@@ -2,15 +2,15 @@
 This project demonstrates a complete implementation of authentication and authorization using Spring Security with JSON Web Tokens (JWT).
 
 ## Features
-- [x] User registration
-- [x] User login with generation of JWT token
-- [x] Persistence layer with H2 Database
-- [x] Password encryption with BCrypt
-- [x] JWT authentication filter for protected routes
-- [x] Role-based authorization
-- [ ] Custom access denied handling
-- [ ] Logout mechanism
-- [ ] Refresh token
+- User registration
+- User login with generation of JWT token
+- Persistence layer with H2 Database
+- Password encryption with BCrypt
+- JWT authentication filter for protected routes
+- Role-based authorization
+- Custom access denied handling
+- Logout mechanism
+- Refresh token
 
 ## Tecnologies
 - Java 32
