@@ -1,11 +1,12 @@
 package local.lab.controllers;
 
 import local.lab.domain.Login;
-import local.lab.domain.LoginMapper;
+import local.lab.domain.UserMapper;
 import local.lab.domain.User;
 import local.lab.dto.LoginRequestDTO;
 import local.lab.dto.LoginResponseDTO;
 import local.lab.dto.RegisterRequestDTO;
+import local.lab.dto.RegisterResponseDTO;
 import local.lab.service.LoginService;
 import local.lab.service.RegisterService;
 import lombok.extern.slf4j.Slf4j;
@@ -28,21 +29,21 @@ public class UserController {
     RegisterService registerService;
 
     @Autowired
-    LoginMapper mapper;
+    UserMapper mapper;
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequest){
         Login login = loginService.login(loginRequest);
+        log.info("User logged in: {}", login);
+
         return ResponseEntity.ok(mapper.toLoginResponseDTO(login));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<LoginResponseDTO> register(@RequestBody RegisterRequestDTO registerRequest){
+    public ResponseEntity<RegisterResponseDTO> register(@RequestBody RegisterRequestDTO registerRequest){
         User user = registerService.register(registerRequest);
         log.info("User registered: {}", user);
 
-        Login login = loginService.login(new LoginRequestDTO(registerRequest.email(), registerRequest.password()));
-
-        return ResponseEntity.ok(mapper.toLoginResponseDTO(login));
+        return ResponseEntity.ok(mapper.toRegisterResponseDTO(user));
     }
 }

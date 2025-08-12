@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import local.lab.domain.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,10 +29,10 @@ public class TokenService {
     @Value("${api.security.token.lifetime}")
     private Integer tokenLifetime;
 
-    public String generateToken(UserDetails user){
+    public String generateToken(User user){
 
         return Jwts.builder()
-                .subject(user.getUsername())
+                .subject(user.getId())
                 .issuer(tokenIssuer)
                 .issuedAt(Date.from(Instant.now()))
                 .expiration(Date.from(Instant.now().plus(tokenLifetime, ChronoUnit.HOURS)))

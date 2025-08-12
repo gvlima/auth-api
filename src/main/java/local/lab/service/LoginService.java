@@ -1,13 +1,14 @@
 package local.lab.service;
 
 import local.lab.domain.Login;
+import local.lab.domain.User;
 import local.lab.dto.LoginRequestDTO;
 import local.lab.infrastructure.security.TokenService;
+import local.lab.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -18,15 +19,20 @@ public class LoginService {
     TokenService tokenService;
 
     @Autowired
-    AuthenticationManager authenticationManager;
+    UserRepository userRepository;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     public Login login(LoginRequestDTO loginRequest){
-        var auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password()));
-        UserDetails authenticatedUser = (UserDetails) auth.getPrincipal();
+        User user = this.userRepository.findByEmail(loginRequest.email()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        if(passwordEncoder.matches(loginRequest.password(), user.getPassword())){
+            return Login.builder()
+                    .token(this.tokenService.generateToken(user))
+                    .build();
+        }
 
-        return Login.builder()
-                .token(tokenService.generateToken(authenticatedUser))
-                .build();
+        throw new RuntimeException("Wrong password");
     }
 
 }
