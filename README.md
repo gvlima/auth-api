@@ -13,9 +13,9 @@ This project demonstrates a complete implementation of authentication and author
 - Refresh token
 
 ## Tecnologies
-- Java 32
-- Spring Boot
-- Spring Security
+- Java 21
+- Spring Boot 3.5.4
+- Spring Security 6.5.2
 - H2 Database
 - JJWT (Java JWT)
 - MapStruct
