@@ -14,8 +14,8 @@ This project showcases a complete implementation of authentication and authoriza
 
 ## Tecnologies
 - Java 21
-- Spring Boot 3.5.4
-- Spring Security 6.5.2
+- Spring Boot 3.5.x
+- Spring Security 6.5.x
 - H2 Database
 - JJWT (Java JWT)
 - MapStruct
