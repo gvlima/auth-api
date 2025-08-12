@@ -31,16 +31,10 @@ To get started with this project, you will need to have the following installed 
 To build and run the project, follow these steps:
 
 ```bash
-# 1. Clone project repository
-git clone https://github.com/gvlima/auth-api.git
-
-# 2. Access project folder
-cd auth-api
-
-# 3. Install dependencies and compile project
+# Install dependencies and compile project
 mvn clean install
 
-# 4. Run application
+# Run application
 mvn spring-boot:run
 ```
 
