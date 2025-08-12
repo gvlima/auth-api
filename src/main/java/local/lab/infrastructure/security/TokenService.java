@@ -1,16 +1,20 @@
 package local.lab.infrastructure.security;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTCreationException;
-import com.auth0.jwt.exceptions.JWTVerificationException;
-import local.lab.domain.User;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.SecretKey;
+import java.security.Key;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 
 @Service
 public class TokenService {
@@ -24,32 +28,28 @@ public class TokenService {
     @Value("${api.security.token.lifetime}")
     private Integer tokenLifetime;
 
-    public String generateToken(User user){
-        try {
-            Algorithm algorithm = Algorithm.HMAC256(tokenSecret);
-            return JWT.create()
-                    .withIssuer(tokenIssuer)
-                    .withSubject(user.getEmail())
-                    .withExpiresAt(this.generateExpirationDate())
-                    .sign(algorithm);
-        } catch (JWTCreationException ex){
-            throw new RuntimeException("Error while authenticating");
-        }
+    public String generateToken(UserDetails user){
+
+        return Jwts.builder()
+                .subject(user.getUsername())
+                .issuer(tokenIssuer)
+                .issuedAt(Date.from(Instant.now()))
+                .expiration(Date.from(Instant.now().plus(tokenLifetime, ChronoUnit.HOURS)))
+                .claim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList())
+                .signWith(key())
+                .compact();
     }
 
-    public String validateToken(String token){
-        try {
-            return JWT.require(Algorithm.HMAC256(tokenSecret))
-                    .withIssuer(tokenIssuer)
-                    .build()
-                    .verify(token)
-                    .getSubject();
-        } catch (JWTVerificationException ex){
-            return null;
-        }
+    public Jws<Claims> parse(String jwt) {
+        return Jwts.parser()
+                .requireIssuer(tokenIssuer)
+                .verifyWith((SecretKey) key())
+                .build()
+                .parseSignedClaims(jwt);
     }
 
-    private Instant generateExpirationDate(){
-        return LocalDateTime.now().plusHours(tokenLifetime).toInstant(ZoneOffset.of("-03:00"));
+    private Key key() {
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(tokenSecret));
     }
+
 }

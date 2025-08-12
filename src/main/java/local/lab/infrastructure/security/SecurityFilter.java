@@ -4,17 +4,15 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import local.lab.domain.User;
-import local.lab.repositories.UserRepository;
+import local.lab.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Objects;
 
 @Component
@@ -24,27 +22,45 @@ public class SecurityFilter extends OncePerRequestFilter {
     TokenService tokenService;
 
     @Autowired
-    UserRepository userRepository;
+    UserService userService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        var token = this.recoverToken(request);
-        var login = tokenService.validateToken(token);
+        var token = this.getToken(request);
 
-        if(Objects.nonNull(login)){
-            User user = userRepository.findByEmail(login).orElseThrow(() -> new RuntimeException("User not found"));
-            var authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN"));
-            var authentication = new UsernamePasswordAuthenticationToken(user, null, authorities);
+
+        if(token != null && SecurityContextHolder.getContext().getAuthentication() == null){
+            if (token.split("\\.").length != 3) throw new IllegalArgumentException("JWT inválido");
+            var jws = tokenService.parse(token);
+            var claims = jws.getPayload();
+
+            var username = claims.getSubject();
+            var roles = (java.util.List<String>) claims.getOrDefault("roles", java.util.List.of());
+            var authorities = roles.stream()
+                    .map(r -> r.startsWith("ROLE_") ? r : "ROLE_" + r)
+                    .map(org.springframework.security.core.authority.SimpleGrantedAuthority::new)
+                    .toList();
+
+            var authentication = new UsernamePasswordAuthenticationToken(username, null, authorities);
+            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
         filterChain.doFilter(request, response);
     }
 
-    private String recoverToken(HttpServletRequest request){
-        var authHeader = request.getHeader("Authorization");
-        if(Objects.isNull(authHeader)) return null;
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
+        return path.startsWith("/auth/"); // não filtrar endpoints públicos de auth
+    }
 
-        return authHeader.replace("Bearer", "");
+    private String getToken(HttpServletRequest request){
+        var header = request.getHeader("Authorization");
+        if(Objects.nonNull(header) && header.startsWith("Bearer ")){
+            return header.replace("Bearer ", "");
+        }
+
+        return null;
     }
 }
