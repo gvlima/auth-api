@@ -1,5 +1,6 @@
 # Spring Security with JWT implementation
-This project demonstrates the implementation of JSON Web Tokens (JWT) using Spring Security. It includes the following features:
+This project demonstrates the implementation of JSON Web Tokens (JWT) using Spring Security.
+It includes the following features:
 
 - User registration
 - Password encryption using BCrypt
@@ -22,11 +23,12 @@ This project demonstrates the implementation of JSON Web Tokens (JWT) using Spri
 ## Getting Started
 To get started with this project, you will need to have the following installed on your local machine:
 
-JDK 21
-Maven 3+
+- JDK 21
+- Maven 3+
+
 To build and run the project, follow these steps:
 
-Clone the repository
-Navigate to the project directory
-Build the project: mvn clean install
-Run the project: mvn spring-boot:run
+- Clone the repository
+- Navigate to the project directory
+- Build the project: mvn clean install
+- Run the project: mvn spring-boot:run
