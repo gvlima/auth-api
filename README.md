@@ -10,7 +10,6 @@ This project showcases a complete implementation of authentication and authoriza
 - Security filter for protected routes
 - Role-Based authorization with authorities
 - Custom access denied handling
-- Logout mechanism
 - Refresh token
 
 ## Tecnologies
