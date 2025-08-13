@@ -23,7 +23,7 @@ This project showcases a complete implementation of authentication and authoriza
 - Lombok
 - Maven
 
-## Getting Starte
+## Getting Start
 To get started with this project, you will need to have the following installed on your local machine:
 
 - JDK 21
@@ -38,5 +38,9 @@ mvn clean install
 # Run application
 mvn spring-boot:run
 ```
+## References
+[Spring Security Architecture - Filter ](https://docs.spring.io/spring-security/reference/servlet/architecture.html#servlet-security-filters)</br>
+[Securing Web Application](https://spring.io/guides/gs/securing-web)</br>
+[Spring Security](https://docs.spring.io/spring-security/reference/index.html)
 
 
