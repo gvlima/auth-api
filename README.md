@@ -8,9 +8,9 @@ This project showcases a complete implementation of authentication and authoriza
 - Persistence layer with Spring Data JPA and database
 - Token-based authentication
 - Security filter for protected routes
-- Role-Based authorization with authorities
-- Custom access denied handling
-- Refresh token
+- Role-Based authorization with authorities (pending)
+- Custom access denied handling (pending)
+- Refresh token (pending)
 
 ## Tecnologies
 - Java 21
