@@ -45,12 +45,6 @@ public class SecurityFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
-        String path = request.getServletPath();
-        return path.startsWith("/auth/");
-    }
-
     private String getToken(HttpServletRequest request){
         var header = request.getHeader("Authorization");
         if(Objects.nonNull(header) && header.startsWith("Bearer ")){

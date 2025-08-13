@@ -3,10 +3,7 @@ package local.lab.controllers;
 import local.lab.domain.Login;
 import local.lab.domain.UserMapper;
 import local.lab.domain.User;
-import local.lab.dto.LoginRequestDTO;
-import local.lab.dto.LoginResponseDTO;
-import local.lab.dto.RegisterRequestDTO;
-import local.lab.dto.RegisterResponseDTO;
+import local.lab.dto.*;
 import local.lab.service.LoginService;
 import local.lab.service.RegisterService;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.security.Principal;
 
 @Slf4j
 @RestController
@@ -45,5 +44,17 @@ public class UserController {
         log.info("User registered: {}", user);
 
         return ResponseEntity.ok(mapper.toRegisterResponseDTO(user));
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequestDTO changePasswordRequest, Principal connectedUser) {
+        User user = loginService.changePassword(connectedUser.getName(),
+                changePasswordRequest.oldPassword(),
+                changePasswordRequest.newPassword(),
+                changePasswordRequest.confirmPassword()
+        );
+
+        log.info("User changed password: {}", user);
+        return ResponseEntity.ok().build();
     }
 }

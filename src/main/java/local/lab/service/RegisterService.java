@@ -2,6 +2,7 @@ package local.lab.service;
 
 import local.lab.domain.User;
 import local.lab.dto.RegisterRequestDTO;
+import local.lab.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -12,13 +13,13 @@ import java.util.List;
 public class RegisterService {
 
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     public User register(RegisterRequestDTO registerRequest) {
-        if (userService.findByEmail(registerRequest.email()).isPresent()) {
+        if (userRepository.findByEmail(registerRequest.email()).isPresent()) {
             throw new RuntimeException("User already exists with email: " + registerRequest.email());
         }
 
@@ -30,7 +31,7 @@ public class RegisterService {
                 .enabled(true)
                 .build();
 
-        return userService.save(user);
+        return userRepository.save(user);
     }
 
 }

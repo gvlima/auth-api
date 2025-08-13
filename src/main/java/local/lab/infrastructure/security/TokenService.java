@@ -35,7 +35,7 @@ public class TokenService {
                 .subject(user.getId())
                 .issuer(tokenIssuer)
                 .issuedAt(Date.from(Instant.now()))
-                .expiration(Date.from(Instant.now().plus(tokenLifetime, ChronoUnit.HOURS)))
+                .expiration(Date.from(Instant.now().plus(tokenLifetime, ChronoUnit.MINUTES)))
                 .claim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList())
                 .signWith(key())
                 .compact();

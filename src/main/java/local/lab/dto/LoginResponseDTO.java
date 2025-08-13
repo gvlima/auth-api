@@ -1,4 +1,6 @@
 package local.lab.dto;
 
-public record LoginResponseDTO(String id, String token) {
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public record LoginResponseDTO(@JsonProperty("access_token") String accessToken, @JsonProperty("refresh_token") String RefreshToken) {
 }
