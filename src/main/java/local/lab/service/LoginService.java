@@ -1,5 +1,6 @@
 package local.lab.service;
 
+import jakarta.transaction.Transactional;
 import local.lab.domain.Login;
 import local.lab.domain.User;
 import local.lab.dto.LoginRequestDTO;
@@ -24,14 +25,19 @@ public class LoginService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Transactional
     public Login login(LoginRequestDTO loginRequest){
-        User user = getUser(loginRequest.email());
+        User user = userRepository.findByEmail(loginRequest.email()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         if(passwordEncoder.matches(loginRequest.password(), user.getPassword())){
+            String accessToken = this.tokenService.generateAccessToken(user);
+            String refreshToken = this.tokenService.generateRefreshToken(user);
+            userRepository.updateRefreshToken(user.getId(), refreshToken);
+
             return Login.builder()
-                    .accessToken(this.tokenService.generateToken(user))
+                    .accessToken(accessToken)
+                    .refreshToken(refreshToken)
                     .build();
         }
-
         throw new RuntimeException("Wrong password");
     }
 
@@ -46,10 +52,6 @@ public class LoginService {
         }
 
         throw new RuntimeException("New password and confirmation do not match");
-    }
-
-    private User getUser(String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
 }

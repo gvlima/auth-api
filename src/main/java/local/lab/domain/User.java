@@ -27,6 +27,7 @@ public class User implements UserDetails {
     private String email;
     private String password;
     private Boolean enabled;
+    private String refreshToken;
     private List<String> roles;
 
     @Override

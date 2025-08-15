@@ -29,6 +29,7 @@ public class RegisterService {
                 .password(passwordEncoder.encode(registerRequest.password()))
                 .roles(List.of("USER"))
                 .enabled(true)
+                .refreshToken(null)
                 .build();
 
         return userRepository.save(user);
