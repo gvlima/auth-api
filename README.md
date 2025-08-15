@@ -9,8 +9,7 @@ This project showcases a complete implementation of authentication and authoriza
 - Token-based authentication
 - Security filter for protected routes
 - Role-Based authorization with authorities (pending)
-- Custom access denied handling (pending)
-- Refresh token (pending)
+- Refresh token
 
 ## Tecnologies
 - Java 21
